@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title>用户文件列表页面</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<!--<h2>欢迎：<span th:if="${session.user!=null}" th:text="${session.user.username}"></span> </h2>-->
+<button id="start">开启定时更新</button>
+<button id="stop">关闭定时更新</button>
+<table class="table">
+    <thead>
+        <tr class="active">
+            <td>ID</td>
+            <td>文件原始名称</td>
+            <td>文件新的名称</td>
+            <td>文件后缀</td>
+            <td>储存路径</td>
+            <td>文件大小</td>
+            <td>类型</td>
+            <td>是否图片</td>
+            <td>下载次数</td>
+            <td>上传时间</td>
+            <td>操作</td>
+        </tr>
+    </thead>
+    <tbody>
+        <tr class="success" th:each="file,fileStat:${files}">
+            <td th:text="${file.id}"></td>
+            <td th:text="${file.oldFileName}"></td>
+            <td th:text="${file.newFileName}"></td>
+            <td th:text="${file.ext}"></td>
+            <td th:text="${file.path}"></td>
+            <td th:text="${file.size}"></td>
+            <td th:text="${file.type}"></td>
+            <td>
+                <img th:if="${file.isImg}=='是'" style="width: 80px;height: 40px" th:src="${file.path}+'/'+${file.newFileName}" alt="">
+                <span th:if="${file.isImg}!='是'" th:text="${file.isImg}"></span>
+            </td>
+            <td th:id="${file.id}" th:text="${file.downCounts}"></td>
+            <td th:text="${#dates.format(file.uploadTime,'yyyy-MM-dd HH:mm:ss')}"></td>
+            <td>
+                <a th:href="@{/download(id=${file.id})}">下载</a>
+                <a th:href="@{/download(id=${file.id},openStyle='inline')}">在线打开</a>
+                <a th:href="@{/delete(id=${file.id})}">删除</a>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<hr>
+<h3>上传文件</h3>
+<form th:action="@{/upload}" method="post" enctype="multipart/form-data">
+    <input type="file" name="myfile"> <input type="submit" value="上传文件">
+</form>
+<script th:src="@{/js/jquery.min.js}"></script>
+<script th:src="@{/js/showAll.js}"></script>
+</body>
+</html>
